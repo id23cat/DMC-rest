@@ -1,10 +1,5 @@
 package com.security.service;
 
-import static java.util.Collections.emptyList;
-
-import java.util.ArrayList;
-import java.util.Collections;
-
 import com.security.controller.auth.dto.UserDTO;
 import com.security.controller.auth.model.UserModel;
 import com.security.controller.auth.repo.UserManager;
@@ -17,20 +12,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
-
-
+    @Autowired
     private UserManager userManager;
+
+    @Autowired
     private PasswordEncoder bcryptEncoder;
-
-    @Autowired
-    public void setUserManager(UserManager userManager) {
-        this.userManager = userManager;
-    }
-
-    @Autowired
-    public void setBcryptEncoder(PasswordEncoder bcryptEncoder) {
-        this.bcryptEncoder = bcryptEncoder;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -42,9 +28,13 @@ public class JwtUserDetailsService implements UserDetailsService {
         }
     }
 
-    public UserModel save(UserDTO user) {
-        UserModel newUser = new UserModel(user.getUsername(), bcryptEncoder.encode(user.getPassword()), emptyList());
-        return userManager.save(newUser);
+    public void delete(UserDTO dto) {
+        userManager.delete(new UserModel(dto));
+    }
+
+    public UserModel saveOrUpdate(UserDTO dto) {
+        dto.setPassword(bcryptEncoder.encode(dto.getPassword()));
+        return userManager.save(new UserModel(dto));
     }
 
 }

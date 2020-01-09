@@ -1,13 +1,11 @@
 package com.security.controller.auth.model;
 
 
-import static java.util.Collections.emptyList;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.security.controller.auth.dto.UserDTO;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Column;
@@ -15,11 +13,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -49,9 +45,14 @@ public class UserModel implements UserDetails {
         this.authorityModels = authorityModels;
     }
 
-    public UserModel() {
+    public UserModel(UserDTO dto) {
+        this.username = dto.getUsername();
+        this.password = dto.getPassword();
+        this.authorityModels = dto.getAuthorityModels();
     }
 
+    public UserModel() {
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

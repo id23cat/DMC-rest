@@ -21,40 +21,36 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 public class JwtAuthenticationController {
 
+    @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
     private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
     private JwtUserDetailsService userDetailsService;
-
-    @Autowired
-    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-    }
-
-    @Autowired
-    public void setJwtTokenUtil(JwtTokenUtil jwtTokenUtil) {
-        this.jwtTokenUtil = jwtTokenUtil;
-    }
-
-    @Autowired
-    public void setUserDetailsService(JwtUserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-
         final String token = jwtTokenUtil.generateToken(userDetails);
-
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> saveUser(@RequestBody UserDTO user) throws Exception {
-        return ResponseEntity.ok(userDetailsService.save(user));
+        return ResponseEntity.ok(userDetailsService.saveOrUpdate(user));
+    }
+
+    @RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
+    public void deleteUser(@RequestBody UserDTO user) throws Exception {
+        userDetailsService.delete(user);
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public ResponseEntity<?> updateUser(@RequestBody UserDTO user) throws Exception {
+        return ResponseEntity.ok(userDetailsService.saveOrUpdate(user));
     }
 
     private void authenticate(String username, String password) throws Exception {
