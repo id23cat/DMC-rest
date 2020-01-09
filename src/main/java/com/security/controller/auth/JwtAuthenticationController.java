@@ -21,14 +21,24 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 public class JwtAuthenticationController {
 
-    @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
     private JwtTokenUtil jwtTokenUtil;
+    private JwtUserDetailsService userDetailsService;
 
     @Autowired
-    private JwtUserDetailsService userDetailsService;
+    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
+
+    @Autowired
+    public void setJwtTokenUtil(JwtTokenUtil jwtTokenUtil) {
+        this.jwtTokenUtil = jwtTokenUtil;
+    }
+
+    @Autowired
+    public void setUserDetailsService(JwtUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
