@@ -1,4 +1,4 @@
-package com.security.controller.auth;
+package dmc.jwt;
 
 
 import java.io.Serializable;

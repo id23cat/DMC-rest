@@ -1,6 +1,6 @@
-package com.security.controller.auth.repo;
+package dmc.repo;
 
-import com.security.controller.auth.model.UserModel;
+import dmc.model.UserModel;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

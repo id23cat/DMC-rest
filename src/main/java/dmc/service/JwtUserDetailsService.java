@@ -1,8 +1,8 @@
-package com.security.service;
+package dmc.service;
 
-import com.security.controller.auth.dto.UserDTO;
-import com.security.controller.auth.model.UserModel;
-import com.security.controller.auth.repo.UserManager;
+import dmc.dto.UserDto;
+import dmc.model.UserModel;
+import dmc.repo.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,11 +28,15 @@ public class JwtUserDetailsService implements UserDetailsService {
         }
     }
 
-    public void delete(UserDTO dto) {
+    public void delete(UserDto dto) {
         userManager.delete(new UserModel(dto));
     }
 
-    public UserModel saveOrUpdate(UserDTO dto) {
+    public boolean isUserExist(UserDto dto) {
+        return userManager.findByUsername(dto.getUsername()) != null;
+    }
+
+    public UserModel saveOrUpdate(UserDto dto) {
         dto.setPassword(bcryptEncoder.encode(dto.getPassword()));
         return userManager.save(new UserModel(dto));
     }

@@ -1,6 +1,6 @@
-package com.security.controller.auth.dto;
+package dmc.dto;
 
-import com.security.controller.auth.model.AuthorityModel;
+import dmc.model.AuthorityModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class UserDto {
     private String username;
     private String password;
     private List<AuthorityModel> authorityModels = new ArrayList<>();

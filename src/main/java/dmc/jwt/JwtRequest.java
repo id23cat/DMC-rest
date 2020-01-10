@@ -1,4 +1,4 @@
-package com.security.controller.auth;
+package dmc.jwt;
 
 import lombok.Getter;
 import lombok.Setter;

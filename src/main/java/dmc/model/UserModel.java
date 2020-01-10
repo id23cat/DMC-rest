@@ -1,10 +1,11 @@
-package com.security.controller.auth.model;
+package dmc.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.security.controller.auth.dto.UserDTO;
+import dmc.dto.UserDto;
 import lombok.Getter;
 import lombok.Setter;
+import javax.persistence.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,7 +13,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Collection;
@@ -45,7 +45,7 @@ public class UserModel implements UserDetails {
         this.authorityModels = authorityModels;
     }
 
-    public UserModel(UserDTO dto) {
+    public UserModel(UserDto dto) {
         this.username = dto.getUsername();
         this.password = dto.getPassword();
         this.authorityModels = dto.getAuthorityModels();

@@ -1,4 +1,4 @@
-package com.security.jwt;
+package dmc.jwt;
 
 
 import io.jsonwebtoken.Claims;
