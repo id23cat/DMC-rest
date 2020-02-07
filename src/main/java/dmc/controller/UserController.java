@@ -1,6 +1,9 @@
 package dmc.controller;
 
 
+import static dmc.jwt.JWTConstants.AUTHORIZATION_HEADER;
+import static dmc.jwt.JWTConstants.TOKEN_PREFIX;
+import static java.util.Objects.isNull;
 import static org.springframework.http.ResponseEntity.ok;
 
 import dmc.controller.helper.ResponseHelper;
@@ -22,8 +25,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class UserController {
@@ -69,8 +73,13 @@ public class UserController {
     }
 
     @RequestMapping(value = "/getUserContext", method = RequestMethod.GET)
-    public UserContext getUserContext(@RequestParam(value = "token") final String token) {
-        return userContextService.getUserContextByToken(token);
+    public UserContext getUserContext(HttpServletRequest request) {
+        final String token = request.getHeader(AUTHORIZATION_HEADER);
+        if (isNull(token)) {
+            return new UserContext();
+        } else {
+            return userContextService.getUserContextByToken(token.substring(TOKEN_PREFIX.length()));
+        }
     }
 
     /*not implemented, temp endpoint for debug*/
@@ -84,7 +93,7 @@ public class UserController {
         return ok(userDetailsService.saveOrUpdate(user));
     }
 
-    private void authenticate(String username, String password) throws Exception {
+    private void authenticate(final String username, final String password) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException e) {
