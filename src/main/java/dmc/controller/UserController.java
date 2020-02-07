@@ -5,11 +5,13 @@ import static org.springframework.http.ResponseEntity.ok;
 
 import dmc.controller.helper.ResponseHelper;
 import dmc.dto.TaskDto;
+import dmc.dto.UserContext;
 import dmc.dto.UserDto;
 import dmc.jwt.JwtRequest;
 import dmc.jwt.JwtResponse;
 import dmc.jwt.JwtTokenUtil;
 import dmc.service.JwtUserDetailsService;
+import dmc.service.UserContextService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,27 +19,33 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin
 public class UserController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final JwtUserDetailsService userDetailsService;
+    private final ResponseHelper responseHelper;
+    private final UserContextService userContextService;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
-    private JwtUserDetailsService userDetailsService;
-
-    @Autowired
-    private ResponseHelper responseHelper;
+    public UserController(final AuthenticationManager authenticationManager,
+                          final JwtTokenUtil jwtTokenUtil,
+                          final JwtUserDetailsService userDetailsService,
+                          final ResponseHelper responseHelper,
+                          final UserContextService userContextService) {
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.userDetailsService = userDetailsService;
+        this.responseHelper = responseHelper;
+        this.userContextService = userContextService;
+    }
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
@@ -58,6 +66,11 @@ public class UserController {
     @RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
     public void deleteUser(@RequestBody UserDto user) throws Exception {
         userDetailsService.delete(user);
+    }
+
+    @RequestMapping(value = "/getUserContext", method = RequestMethod.GET)
+    public UserContext getUserContext(@RequestParam(value = "token") final String token) {
+        return userContextService.getUserContextByToken(token);
     }
 
     /*not implemented, temp endpoint for debug*/

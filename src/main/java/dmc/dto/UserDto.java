@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
+    private Integer id;
     private String username;
     private String password;
     private List<AuthorityModel> authorityModels = new ArrayList<>();

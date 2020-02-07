@@ -1,5 +1,7 @@
 package dmc.service;
 
+import static java.util.Objects.isNull;
+
 import dmc.dto.UserDto;
 import dmc.model.UserModel;
 import dmc.repo.UserManager;
@@ -20,8 +22,8 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        userManager.findByUsername(username);
-        if (userManager.findByUsername(username) != null) {
+        final UserDetails details = userManager.findByUsername(username);
+        if (!isNull(details)) {
             return userManager.findByUsername(username);
         } else {
             throw new UsernameNotFoundException("User not found with username: " + username);
@@ -29,7 +31,7 @@ public class JwtUserDetailsService implements UserDetailsService {
     }
 
     public void delete(UserDto dto) {
-        userManager.delete(new UserModel(dto));
+        userManager.deleteById(dto.getId());
     }
 
     public boolean isUserExist(UserDto dto) {

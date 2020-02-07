@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import dmc.dto.UserDto;
 import lombok.Getter;
 import lombok.Setter;
+
 import javax.persistence.Id;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -27,13 +29,15 @@ public class UserModel implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Integer id;
+
     @Column
     private String username;
 
     @Column
     @JsonIgnore
     private String password;
+
     @Column
     @OneToMany
     private List<AuthorityModel> authorityModels;
