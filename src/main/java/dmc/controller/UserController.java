@@ -5,6 +5,8 @@ import static dmc.jwt.JWTConstants.AUTHORIZATION_HEADER;
 import static dmc.jwt.JWTConstants.TOKEN_PREFIX;
 import static java.util.Objects.isNull;
 import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import dmc.controller.helper.ResponseHelper;
 import dmc.dto.TaskDto;
@@ -24,7 +26,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -51,44 +52,42 @@ public class UserController {
         this.userContextService = userContextService;
     }
 
-    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+    @RequestMapping(value = "/authenticate", method = POST)
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody final JwtRequest authenticationRequest) throws Exception {
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ok(new JwtResponse(token));
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ResponseEntity<?> saveUser(@RequestBody UserDto user) throws Exception {
+    @RequestMapping(value = "/register", method = POST)
+    public ResponseEntity<?> saveUser(@RequestBody final UserDto user) throws Exception {
         if (userDetailsService.isUserExist(user)) {
             return responseHelper.userAlreadyExist(user);
         }
         return ok(userDetailsService.saveOrUpdate(user));
     }
 
-    @RequestMapping(value = "/deleteUser", method = RequestMethod.POST)
+    @RequestMapping(value = "/deleteUser", method = POST)
     public void deleteUser(@RequestBody UserDto user) throws Exception {
         userDetailsService.delete(user);
     }
 
-    @RequestMapping(value = "/getUserContext", method = RequestMethod.GET)
-    public UserContext getUserContext(HttpServletRequest request) {
+    @RequestMapping(value = "/getUserContext", method = GET)
+    public UserContext getUserContext(final HttpServletRequest request) {
         final String token = request.getHeader(AUTHORIZATION_HEADER);
-        if (isNull(token)) {
-            return new UserContext();
-        } else {
-            return userContextService.getUserContextByToken(token.substring(TOKEN_PREFIX.length()));
-        }
+        return isNull(token)
+                ? new UserContext()
+                : userContextService.getUserContextByToken(token.substring(TOKEN_PREFIX.length()));
     }
 
     /*not implemented, temp endpoint for debug*/
-    @RequestMapping(value = "/testJson", method = RequestMethod.POST)
+    @RequestMapping(value = "/testJson", method = POST)
     public void testJson(@RequestBody TaskDto dto) throws Exception {
         System.out.println(dto);
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/update", method = POST)
     public ResponseEntity<?> updateUser(@RequestBody UserDto user) throws Exception {
         return ok(userDetailsService.saveOrUpdate(user));
     }
