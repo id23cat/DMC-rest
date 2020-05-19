@@ -8,10 +8,11 @@ import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import DMCmodels.dto.UserDto;
+import dmc.client.CoreClient;
 import dmc.controller.helper.ResponseHelper;
-import dmc.dto.TaskDto;
-import dmc.dto.UserContext;
-import dmc.dto.UserDto;
+import DMCmodels.dto.TaskDto;
+import DMCmodels.dto.UserContext;
 import dmc.jwt.JwtRequest;
 import dmc.jwt.JwtResponse;
 import dmc.jwt.JwtTokenUtil;
@@ -24,6 +25,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,18 +40,21 @@ public class UserController {
     private final JwtUserDetailsService userDetailsService;
     private final ResponseHelper responseHelper;
     private final UserContextService userContextService;
+    private final CoreClient coreClient;
 
     @Autowired
     public UserController(final AuthenticationManager authenticationManager,
                           final JwtTokenUtil jwtTokenUtil,
                           final JwtUserDetailsService userDetailsService,
                           final ResponseHelper responseHelper,
-                          final UserContextService userContextService) {
+                          final UserContextService userContextService,
+                          final CoreClient coreClient) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenUtil = jwtTokenUtil;
         this.userDetailsService = userDetailsService;
         this.responseHelper = responseHelper;
         this.userContextService = userContextService;
+        this.coreClient = coreClient;
     }
 
     @RequestMapping(value = "/authenticate", method = POST)
@@ -62,6 +67,7 @@ public class UserController {
 
     @RequestMapping(value = "/register", method = POST)
     public ResponseEntity<?> saveUser(@RequestBody final UserDto user) throws Exception {
+        coreClient.getString();
         if (userDetailsService.isUserExist(user)) {
             return responseHelper.userAlreadyExist(user);
         }

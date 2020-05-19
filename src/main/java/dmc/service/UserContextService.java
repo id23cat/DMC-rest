@@ -1,8 +1,8 @@
 package dmc.service;
 
-import dmc.dto.UserContext;
+import DMCmodels.dto.UserContext;
 import dmc.jwt.JwtTokenUtil;
-import dmc.model.UserModel;
+import DMCmodels.model.UserModel;
 import dmc.repo.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

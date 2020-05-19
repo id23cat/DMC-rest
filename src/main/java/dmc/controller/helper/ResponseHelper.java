@@ -3,7 +3,7 @@ package dmc.controller.helper;
 import static org.springframework.http.ResponseEntity.unprocessableEntity;
 
 import com.google.gson.JsonObject;
-import dmc.dto.UserDto;
+import DMCmodels.dto.UserDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 

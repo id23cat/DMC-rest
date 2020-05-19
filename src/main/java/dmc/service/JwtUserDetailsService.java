@@ -2,8 +2,8 @@ package dmc.service;
 
 import static java.util.Objects.isNull;
 
-import dmc.dto.UserDto;
-import dmc.model.UserModel;
+import DMCmodels.dto.UserDto;
+import DMCmodels.model.UserModel;
 import dmc.repo.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

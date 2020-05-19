@@ -1,6 +1,6 @@
 package dmc.repo;
 
-import dmc.model.UserModel;
+import DMCmodels.model.UserModel;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
